@@ -145,9 +145,9 @@ exports.registerController = async (req, res) => {
 };
 
 // Get All Users
-exports.getUsersController = async (req, res) => {
+exports. getUsersController= async (req, res) => {
   try {
-    const users = await userModel.find({});
+    const users = await userModel.find();
     return res.status(200).send({
       usersCount: users.length,
       success: true,

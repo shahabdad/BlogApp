@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "password is required"],
     },
-    blog: [
+    blogs: [
       {
         type: mongoose.Types.ObjectId,
         ref: "Blog",
