@@ -1,15 +1,62 @@
-import React from 'react'
-import {Box,AppBar,Toolbar,Button,Typography} from  '@mui/material'
+import React , {useState} from 'react';
+// import {useNavigate} from "react-router-dom";
+import {Box,AppBar,Toolbar,Button,Typography,Tabs,Tob, Tab} from  '@mui/material'
+import { Link, useNavigate } from 'react-router-dom'
+import {useSelector,useDispatch}  from 'react-redux'
+// const {authActions} from '../Router/store';
+import { authActions } from '../Redux/store';
 const Header = () => {
+  //  global state 
+
+  const  isLogin = useSelector ((state) =>  state.isLogin);
+  const dispatch  = useDispatch();
+  const navigate = useNavigate();
+  console.log(isLogin)
+// state
+  const [value ,setValue] = useState();
+  // logout 
+  const handleLogout = () =>{
+    try{
+dispatch(authActions.logout() );
+alert('Logout Successfully')
+navigate('/login')
+    }catch(error){
+      console.log (error)
+
+    }
+  }
   return (
  <>
  <AppBar position = 'sticky'>
     <Toolbar>
         <Typography variant = 'h4'>My  Blog App </Typography>
+  {isLogin && (
+    <Box display={"flex"} marginLeft={"auto"} marginRight={"auto"}>
+    
+    <Tabs
+        textColor="inherit"
+        value={value}
+        onChange={(e, val) => setValue(val)}
+      >
+        <Tab label="Blogs" component={Link} to="/blogs" />
+        <Tab label="My Blogs" component={Link} to="/my-blogs" />
+      </Tabs>
+</Box>
+
+  )} 
         <Box display={"flex"}  marginLeft={"auto"}>
-            <Button sx= {{margin :1, color :  "white"}}>Login</Button>
-            <Button sx= {{margin :1, color :  "white"}}>Register</Button>
-            <Button sx= {{margin :1, color :  "white"}}>Logout</Button>
+          {!isLogin && (
+            <>
+               <Button sx= {{margin :1, color :  "white"}} LinkComponent={Link} to='/login'>Login</Button>
+               <Button sx= {{margin :1, color :  "white"}} LinkComponent={Link} to='/register'  >Register</Button>
+            </>
+          )}
+         {isLogin &&(
+          
+                 <Button onClick={handleLogout}  sx= {{margin :1, color :  "white"}}>Logout</Button>
+                 
+         ) }
+     
         </Box>
     </Toolbar>
  </AppBar>
@@ -17,4 +64,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default Header 
