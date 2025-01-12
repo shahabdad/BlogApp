@@ -153,6 +153,7 @@ const Blogs = () => {
         {blogs &&
           blogs.map((blog) => (
             <Blogcard
+            id={blog._id}
               key={blog._id}
               title={blog.title}
               description={blog.description}

@@ -91,8 +91,11 @@ const Blogcard = ({ title, description, image, username,time }) => {
       />
       <CardMedia component="img" height="194" image={image} alt={title} />
       <CardContent>
+        <Typography variant='h6' color='text.sencondary'> 
+        Title :  {title}
+        </Typography>
         <Typography variant="body2" color="text.secondary">
-          {description}
+       Description:{description}
         </Typography>
       </CardContent>
     </Card>

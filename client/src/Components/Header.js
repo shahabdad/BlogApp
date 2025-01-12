@@ -40,6 +40,7 @@ navigate('/login')
       >
         <Tab label="Blogs" component={Link} to="/blogs" />
         <Tab label="My Blogs" component={Link} to="/my-blogs" />
+        <Tab label="Create Blog" component={Link} to="/create-blog" />
       </Tabs>
 </Box>
 
