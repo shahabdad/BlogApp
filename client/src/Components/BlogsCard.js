@@ -61,12 +61,18 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-const Blogcard = ({ title, description, image, username,time }) => {
+// import EditIcon from '@mui/icons-material/Edit';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, IconButton } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+const Blogcard = ({ title, description, image, username,time ,id,isUser}) => {
+  const navigate = useNavigate()
+  const handleEdit  =() =>{
+    navigate(`/blog-details/${id}`);
+  }
   return (
     <Card
       sx={{
@@ -79,12 +85,25 @@ const Blogcard = ({ title, description, image, username,time }) => {
         },
       }}
     >
-      <CardHeader
+    {isUser && (
+
+      <Box display={'flex'}>
+        
+<IconButton onClick={handleEdit} sx={{marginLeft:'auto'}}>
+  < ModeEditIcon/>
+</IconButton>
+<IconButton>
+  <DeleteIcon/>
+</IconButton>
+      </Box>
+
+    ) }
+      <Card
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
             {username ? username[0].toUpperCase() : '?'}
           </Avatar>
-        }
+        } 
       
         title={username}
         subheader={time}

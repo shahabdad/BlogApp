@@ -104,7 +104,7 @@ const CreateBlogs = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const {data } = await  axios.post('/api/v1/blog/create-blog',{
+            const {data } = await  axios.post('http://localhost:9001/api/v1/blog/create-blog',{
                 title :inputs.title,
                 description:inputs.description,
                 image:inputs.image,
@@ -112,7 +112,7 @@ const CreateBlogs = () => {
             })
             if(data?.success){
                 alert('Blog Created')
-                navigate('/my=blogs')
+                navigate('/my-blogs')
             }
         }catch(error){
             console.log(Error);
