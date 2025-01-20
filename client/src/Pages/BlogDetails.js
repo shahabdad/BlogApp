@@ -3,7 +3,7 @@ import axios from "axios";
 // import { InputLabel, TextField, Typography } from "@mui/material";
 import { Box, Button, InputLabel, TextField, Typography } from '@mui/material';
 import {useNavigate, useParams} from 'react-router-dom';
-
+import toast from 'react-hot-toast';
 const BlogDetails = () =>{
     const [blog,setBlog]  = useState({})
     const id = useParams().id
@@ -48,7 +48,7 @@ if (data?.success){
               user:id,
           })
           if(data?.success){
-              alert('Blog Updated')
+              toast.success('Blog Updated')
               navigate('/my-blogs')
           }
       }catch(error){

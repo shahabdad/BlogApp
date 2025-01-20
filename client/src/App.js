@@ -7,6 +7,7 @@ import Register from './Pages/Register';
 import UserBlogs from './Pages/UserBlogs';
 import CreateBlogs from './Pages/CreateBlogs';
 import BlogDetails from './Pages/BlogDetails';
+import   { Toaster } from 'react-hot-toast';
 function App() {
   return (
     <div>

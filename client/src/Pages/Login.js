@@ -95,7 +95,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from '../Redux/store';
-
+import toast from 'react-hot-toast';
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -130,7 +130,7 @@ function Login() {
       }
     } catch (error) {
       console.error("Login Error:", error.response?.data || error.message);
-      alert("Login failed. Please check your email and password.");
+      toast.success("Login failed. Please check your email and password.");
     }
   };
 
