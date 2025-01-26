@@ -12,6 +12,7 @@ function App() {
   return (
     <div>
       <Header />
+         <Toaster />
       <Routes>
         <Route path='/' element={<Blogs />} />
         <Route path='/Blogs' element={<Blogs />} />
