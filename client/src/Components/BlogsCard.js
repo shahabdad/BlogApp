@@ -1,3 +1,100 @@
+// import React from 'react';
+// import { Card, CardMedia, CardContent, Avatar, Typography, Box, IconButton } from '@mui/material';
+// import { blue, grey, red } from '@mui/material/colors';
+// import ModeEditIcon from '@mui/icons-material/ModeEdit';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
+// const Blogcard = ({ title, description, image, username, time, id, isUser }) => {
+//   const navigate = useNavigate();
+
+//   const handleDelete = async () => {
+//     try {
+      
+//       const { data } = await axios.delete(`http://localhost:9001/api/v1/blog/delete-blog/${id}`);
+//       if (data?.success) {
+//         alert('Blog Deleted');
+//         window.location.reload(); // Reloading the page after deletion
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       alert('Failed to delete the blog. Please try again.');
+//     }
+//   };
+
+  
+//   const handleEdit = () => {
+//     navigate(`/blog-details/${id}`); 
+//   };
+
+//   return (
+//     <Card
+//       sx={{
+//         width: '90%',
+//         margin: '20px auto', 
+//         height:'60%',
+//         padding: '2px', 
+//         backgroundColor: grey[50], 
+//         boxShadow: '5px 5px 15px rgba(0, 0, 0, 0.1)', 
+//         ':hover': {
+//           boxShadow: '10px 10px 30px rgba(20, 0, 0, 0.2)', 
+//         },
+//         borderRadius: '10px',
+//       }}
+//     >
+//       {isUser && (
+//         <Box display="flex" justifyContent="flex-end">
+//           <IconButton onClick={handleEdit}>
+//             <ModeEditIcon sx={{ color: blue[500] }} /> 
+//           </IconButton>
+//           <IconButton onClick={handleDelete}>
+//             <DeleteIcon sx={{ color: red[500] }} />
+//           </IconButton>
+//         </Box>
+//       )}
+
+      
+//       <Box display="flex" alignItems="center" mb={1}>
+//         <Avatar sx={{ bgcolor: blue[500] }} aria-label="user-avatar">
+//           {username || 'N/A'} 
+//         </Avatar>
+//         <Typography variant="h6" sx={{ marginLeft: 1, color: blue[700] }}>
+//           {username} 
+//         </Typography>
+//       </Box>
+
+   
+//       <CardMedia
+//         component="img"
+//         image={image}
+//         alt={title || 'Blog Image'}
+//         sx={{
+//           width: '100%', 
+//           height: '50%', 
+//           objectFit: 'cover', 
+//         }}
+//       />
+
+   
+//       <CardContent>
+//         <Typography variant="h5" sx={{ fontWeight: 'bold', color: blue[700] }}>
+//           {title}
+//         </Typography>
+//         <Typography variant="body2" sx={{ color: grey[900], marginBottom: 2 }}>
+//           {description.length > 50 ? `${description.slice(0, 140)}...` : description}
+//         </Typography>
+//         <Typography variant="caption" sx={{ color: grey[500] }}>
+//           Published on: {new Date(time).toLocaleDateString() || 'N/A'}
+//         </Typography>
+//       </CardContent>
+//     </Card>
+//   );
+// };
+
+// export default Blogcard;
+
+
+
 import React from 'react';
 import { Card, CardMedia, CardContent, Avatar, Typography, Box, IconButton } from '@mui/material';
 import { blue, grey, red } from '@mui/material/colors';
@@ -5,16 +102,16 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
 const Blogcard = ({ title, description, image, username, time, id, isUser }) => {
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     try {
-      // Sending DELETE request to server
       const { data } = await axios.delete(`http://localhost:9001/api/v1/blog/delete-blog/${id}`);
       if (data?.success) {
         alert('Blog Deleted');
-        window.location.reload(); // Reloading the page after deletion
+        window.location.reload();
       }
     } catch (error) {
       console.error(error);
@@ -22,69 +119,90 @@ const Blogcard = ({ title, description, image, username, time, id, isUser }) => 
     }
   };
 
-  // Function to edit the blog
   const handleEdit = () => {
-    navigate(`/blog-details/${id}`); // Navigate to the blog edit page
+    navigate(`/blog-details/${id}`);
   };
 
   return (
     <Card
       sx={{
-        width: '50%', // Card width
-        margin: '20px auto', // Centered on the page
-        padding: 2, // Padding inside the card
-        backgroundColor: grey[50], // Soft light grey background
-        boxShadow: '5px 5px 15px rgba(0, 0, 0, 0.1)', // Subtle shadow for a professional look
-        ':hover': {
-          boxShadow: '10px 10px 20px rgba(0, 0, 0, 0.2)', // Shadow on hover for emphasis
+        width: {
+          xs: '95%', // 95% width on extra-small screens
+          sm: '90%', // 90% width on small screens
+          md: '80%', // 80% width on medium and above
         },
-        borderRadius: '10px', // Rounded corners
+        margin: '20px auto',
+        padding: 2,
+        backgroundColor: grey[50],
+        boxShadow: '5px 5px 15px rgba(0, 0, 0, 0.1)',
+        ':hover': {
+          boxShadow: '10px 10px 30px rgba(20, 0, 0, 0.2)',
+        },
+        borderRadius: '10px',
       }}
     >
-      {/* Show edit and delete buttons only if the user is the owner */}
+      {/* Edit/Delete Buttons for Admin/User */}
       {isUser && (
         <Box display="flex" justifyContent="flex-end">
           <IconButton onClick={handleEdit}>
-            <ModeEditIcon sx={{ color: blue[500] }} /> {/* Edit button in blue */}
+            <ModeEditIcon sx={{ color: blue[500] }} />
           </IconButton>
           <IconButton onClick={handleDelete}>
-            <DeleteIcon sx={{ color: red[500] }} /> {/* Delete button in red */}
+            <DeleteIcon sx={{ color: red[500] }} />
           </IconButton>
         </Box>
       )}
 
-      {/* Card Header: Avatar and Username */}
+      {/* User Info */}
       <Box display="flex" alignItems="center" mb={1}>
         <Avatar sx={{ bgcolor: blue[500] }} aria-label="user-avatar">
-          {username || 'N/A'} {/* Display the first letter of the username */}
+          {username ? username[0].toUpperCase() : 'N'}
         </Avatar>
-        <Typography variant="h6" sx={{ marginLeft: 1, color: blue[700] }}>
-          {username} {/* Display username */}
+        <Typography variant="h6" sx={{ marginLeft: 1, color: blue[700], fontSize: { xs: '1rem', sm: '1.2rem' } }}>
+          {username || 'Unknown User'}
         </Typography>
       </Box>
 
-      {/* Card Media with Image (Full Image Display) */}
+      {/* Blog Image */}
       <CardMedia
         component="img"
         image={image}
         alt={title || 'Blog Image'}
         sx={{
-          width: '100%', // Make the image responsive and take up full width of its container
-          height: 'auto', // Ensure image maintains aspect ratio
-          objectFit: 'cover', // Ensures the image covers the area without distortion
+          width: '100%',
+          height: {
+            xs: '200px', // Smaller height for extra-small screens
+            sm: '250px', // Medium height for small screens
+            md: '300px', // Larger height for medium and above
+          },
+          objectFit: 'cover',
+          borderRadius: '8px',
         }}
       />
 
-      {/* Card Content: Title, Description, and Time */}
+      {/* Blog Content */}
       <CardContent>
-        <Typography variant="h5" sx={{ fontWeight: 'bold', color: blue[700] }}>
-          {title} {/* Display blog title */}
+        <Typography variant="h5" sx={{ fontWeight: 'bold', color: blue[700], fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>
+          {title}
         </Typography>
-        <Typography variant="body2" sx={{ color: grey[900], marginBottom: 2 }}>
-          {description} {/* Display blog description */}
+        <Typography
+          variant="body2"
+          sx={{
+            color: grey[900],
+            marginBottom: 2,
+            fontSize: { xs: '0.9rem', sm: '1rem' },
+          }}
+        >
+          {description.length > 140 ? `${description.slice(0, 140)}...` : description}
         </Typography>
-        <Typography variant="caption" sx={{ color: grey[500] }}>
-          Published on: {new Date(time).toLocaleDateString() || 'N/A'} {/* Display blog publish date */}
+        <Typography
+          variant="caption"
+          sx={{
+            color: grey[500],
+            fontSize: { xs: '0.8rem', sm: '0.9rem' },
+          }}
+        >
+          Published on: {new Date(time).toLocaleDateString() || 'N/A'}
         </Typography>
       </CardContent>
     </Card>
