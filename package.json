@@ -4,14 +4,13 @@
   "description": "blog App",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js ",
+    "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix ./client",
-    "dev": " concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
-    "type": "git",
-    "url": " "
+    "type": "git"
   },
   "author": "",
   "license": "ISC",
@@ -37,3 +36,4 @@
     "cross-env": "^7.0.3"
   }
 }
+
