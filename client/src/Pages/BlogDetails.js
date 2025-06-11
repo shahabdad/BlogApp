@@ -1,6 +1,5 @@
 import   React ,{useState,useEffect} from "react";
 import axios from "axios";
-// import { InputLabel, TextField, Typography } from "@mui/material";
 import { Box, Button, InputLabel, TextField, Typography } from '@mui/material';
 import {useNavigate, useParams} from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -12,7 +11,6 @@ const BlogDetails = () =>{
     // blog detalis get
     const getBlogDetail = async () =>{
         try{
-    // const {data}  = await axios.get(`/api/v1/blog/get-blog/${id}`)
     const { data } = await axios.get(`/api/v1/blog/get-blog/${id}`);
 // part of speech 
 if (data?.success){
