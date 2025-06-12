@@ -143,7 +143,7 @@ const Register = () => {
     try {
       const formData = new FormData();
       formData.append("username", inputs.name);
-      formData.append("em`ail", inputs.email);
+      formData.append("email", inputs.email);
       formData.append("password", inputs.password);
       formData.append("image", image);
 
