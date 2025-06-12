@@ -1,11 +1,8 @@
 const express = require ('express');
 const { getAllBlogsController, createBlogController, updateBLogController, getBlogByIdController, deleteBlogController, userBlogController } = require('../controller/blogController');
 
-
 // router object
 const  router = express.Router();
-
-
 // router
 // GET ||  ALL blogs
 router.get('/all-blog',getAllBlogsController)
