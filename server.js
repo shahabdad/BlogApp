@@ -63,7 +63,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
 
-// 👇 This line is necessary to access uploaded image files
+//  This line is necessary to access uploaded image files
 app.use("/uploads", express.static("uploads"));
 
 // routes

@@ -166,7 +166,7 @@ const {
   registerController,
   loginController
 } = require('../controller/userController');
-const upload = require('../middlware/upload'); // ✅ FIXED: moved to top
+const upload = require('../middlware/upload'); 
 
 const router = express.Router();
 
