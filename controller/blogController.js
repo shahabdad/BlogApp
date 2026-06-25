@@ -31,7 +31,7 @@ exports.getAllBlogsController = async (req, res) => {
 // Create Blog
 exports.createBlogController = async (req, res) => {
   try {
-    const { title, description, image, user } = req.body;
+    const { title, description, image, user, category } = req.body;
 
     if (!title || !description || !image || !user) {
       return res.status(400).send({
@@ -48,7 +48,7 @@ exports.createBlogController = async (req, res) => {
       });
     }
 
-    const newBlog = new blogModel({ title, description, image, user });
+    const newBlog = new blogModel({ title, description, image, user, category: category || "General" });
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -77,11 +77,11 @@ exports.createBlogController = async (req, res) => {
 exports.updateBLogController = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, image } = req.body;
+    const { title, description, image, category } = req.body;
 
     const blog = await blogModel.findByIdAndUpdate(
       id,
-      { title, description, image },
+      { title, description, image, category },
       { new: true }
     );
 
@@ -179,6 +179,90 @@ exports.userBlogController = async (req, res) => {
     return res.status(400).send({
       success: false,
       message: 'Error while fetching user blogs',
+      error,
+    });
+  }
+};
+
+// Like/Unlike Blog
+exports.likeBlogController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).send({
+        success: false,
+        message: 'User ID is required to like/unlike a blog',
+      });
+    }
+
+    const blog = await blogModel.findById(id);
+    if (!blog) {
+      return res.status(404).send({
+        success: false,
+        message: 'Blog not found',
+      });
+    }
+
+    const index = blog.likes.indexOf(userId);
+    if (index === -1) {
+      blog.likes.push(userId);
+    } else {
+      blog.likes.splice(index, 1);
+    }
+
+    await blog.save();
+    return res.status(200).send({
+      success: true,
+      message: 'Blog like status updated',
+      likesCount: blog.likes.length,
+      likes: blog.likes,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      success: false,
+      message: 'Error while toggling like status',
+      error,
+    });
+  }
+};
+
+// Add Comment
+exports.commentBlogController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId, username, comment } = req.body;
+
+    if (!userId || !username || !comment) {
+      return res.status(400).send({
+        success: false,
+        message: 'userId, username, and comment are required',
+      });
+    }
+
+    const blog = await blogModel.findById(id);
+    if (!blog) {
+      return res.status(404).send({
+        success: false,
+        message: 'Blog not found',
+      });
+    }
+
+    blog.comments.push({ user: userId, username, comment });
+    await blog.save();
+
+    return res.status(200).send({
+      success: true,
+      message: 'Comment added successfully',
+      comments: blog.comments,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      success: false,
+      message: 'Error while adding comment',
       error,
     });
   }
