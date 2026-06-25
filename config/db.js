@@ -4,9 +4,8 @@ require("dotenv").config();
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URL); 
-console.log(`Connected ti Mongodb Datbase ${mongoose.connection.host}.bgMagenta.green`)
-
+        await mongoose.connect(process.env.MONGO_URL);
+        console.log(`Connected to MongoDB Database ${mongoose.connection.host}`.bgMagenta.white);
     } catch (error) {
         // console.error(`MONGO Connect Error: ${error.message}`);
         // process.exit(1); // Exit the process with failure
