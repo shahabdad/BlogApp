@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   Box,
@@ -34,6 +34,10 @@ const BlogDetails = () => {
         category: 'General'
     });
 
+    const [imageFile, setImageFile] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const fileInputRef = useRef(null);
+
     const categories = ['General', 'Tech', 'Design', 'Travel', 'Food', 'Life'];
 
     // blog details get
@@ -47,6 +51,7 @@ const BlogDetails = () => {
                     image: data?.blog.image,
                     category: data?.blog.category || 'General',
                 });
+                setPreview(data?.blog.image);
             }
         } catch (error) {
             console.log(error);
@@ -67,17 +72,30 @@ const BlogDetails = () => {
         }));
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            setPreview(URL.createObjectURL(file));
+        }
+    };
+
     // Handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.put(`http://localhost:9001/api/v1/blog/update-blog/${id}`, {
-                title: inputs.title,
-                description: inputs.description,
-                image: inputs.image,
-                category: inputs.category,
-                user: localStorage.getItem('userId'),
-            });
+            const formData = new FormData();
+            formData.append('title', inputs.title);
+            formData.append('description', inputs.description);
+            formData.append('category', inputs.category);
+            formData.append('user', localStorage.getItem('userId'));
+            if (imageFile) {
+                formData.append('image', imageFile);
+            } else {
+                formData.append('image', inputs.image);
+            }
+
+            const { data } = await axios.put(`http://localhost:9001/api/v1/blog/update-blog/${id}`, formData);
             if (data?.success) {
                 toast.success('Blog Updated successfully!');
                 navigate('/my-blogs');
@@ -199,7 +217,7 @@ const BlogDetails = () => {
                   </Select>
                 </FormControl>
 
-                {/* Image URL Input */}
+                {/* Cover Image Uploader */}
                 <InputLabel
                   sx={{
                     mb: 1,
@@ -211,41 +229,73 @@ const BlogDetails = () => {
                     color: 'text.primary',
                   }}
                 >
-                  <ImageIcon fontSize="small" /> Image URL
+                  <ImageIcon fontSize="small" /> Cover Image
                 </InputLabel>
-                <TextField
-                  name="image"
-                  value={inputs.image}
-                  onChange={handleChange}
-                  margin="dense"
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-
-                {/* Image Live Preview */}
-                {inputs.image && (
-                  <Box sx={{ mt: 3, textAlign: 'center' }}>
-                    <Typography variant="caption" color="text.secondary" display="block" mb={1}>
-                      Live Cover Preview
-                    </Typography>
-                    <Box
-                      component="img"
-                      src={inputs.image}
-                      alt="Live Preview"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                      sx={{
-                        width: '100%',
-                        maxHeight: 200,
-                        objectFit: 'cover',
-                        borderRadius: 3,
-                        border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
-                      }}
-                    />
-                  </Box>
-                )}
+                <Box
+                  onClick={() => fileInputRef.current.click()}
+                  sx={{
+                    border: `2px dashed ${isDarkMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'}`,
+                    borderRadius: 3,
+                    p: 3,
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    bgcolor: isDarkMode ? 'rgba(255,255,255,0.01)' : 'rgba(0,0,0,0.01)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      borderColor: isDarkMode ? '#818cf8' : '#4f46e5',
+                      bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(79,70,229,0.05)',
+                      transform: 'scale(1.01)',
+                    }
+                  }}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                  />
+                  {preview ? (
+                    <Box>
+                      <Box
+                        component="img"
+                        src={preview}
+                        alt="Cover Preview"
+                        sx={{
+                          width: '100%',
+                          maxHeight: 220,
+                          objectFit: 'cover',
+                          borderRadius: 2,
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        }}
+                      />
+                      <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1.5, fontWeight: 600 }}>
+                        Click to change cover photo
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Box py={2}>
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          bgcolor: isDarkMode ? 'rgba(129,140,248,0.15)' : 'rgba(79,70,229,0.1)',
+                          color: isDarkMode ? '#818cf8' : '#4f46e5',
+                          p: 1.5,
+                          borderRadius: '50%',
+                          mb: 1.5
+                        }}
+                      >
+                        <ImageIcon fontSize="large" />
+                      </Box>
+                      <Typography variant="body1" fontWeight={600} gutterBottom>
+                        Select Cover Image
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        PNG, JPG, JPEG or GIF up to 5MB
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
 
                 {/* Submit Button */}
                 <Button

@@ -9,6 +9,7 @@ const {
   likeBlogController,
   commentBlogController
 } = require('../controller/blogController');
+const upload = require('../middlware/upload');
 
 // router object
 const  router = express.Router();
@@ -18,10 +19,10 @@ router.get('/all-blog',getAllBlogsController)
 
 
 // Post || create blog 
-router.post('/create-blog',createBlogController)
+router.post('/create-blog', upload.single("image"), createBlogController)
 
 //  PUT ||   update blog 
-router.put("/update-blog/:id", updateBLogController)
+router.put("/update-blog/:id", upload.single("image"), updateBLogController)
 
 //  GET || Single Blog  Details
 router.get('/get-blog/:id',getBlogByIdController )

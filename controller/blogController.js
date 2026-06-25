@@ -1,6 +1,21 @@
 const blogModel = require('../models/BlogModel');
 const userModel = require('../models/UserModel');
 const mongoose = require('mongoose');
+const cloudinary = require('../config/cloudinary');
+
+// Helper function to upload file buffer to Cloudinary
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: "blog_covers" },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+    uploadStream.end(fileBuffer);
+  });
+};
 
 // GET All Blogs
 exports.getAllBlogsController = async (req, res) => {
@@ -31,12 +46,33 @@ exports.getAllBlogsController = async (req, res) => {
 // Create Blog
 exports.createBlogController = async (req, res) => {
   try {
-    const { title, description, image, user, category } = req.body;
+    const { title, description, user, category } = req.body;
 
-    if (!title || !description || !image || !user) {
+    if (!title || !description || !user) {
       return res.status(400).send({
         success: false,
         message: 'All fields are required',
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).send({
+        success: false,
+        message: 'Cover image file is required',
+      });
+    }
+
+    // Upload to Cloudinary
+    let image = null;
+    try {
+      const uploadResult = await uploadToCloudinary(req.file.buffer);
+      image = uploadResult.secure_url;
+    } catch (uploadError) {
+      console.error("Cloudinary Blog Upload Error:", uploadError);
+      return res.status(500).send({
+        success: false,
+        message: 'Failed to upload blog cover to Cloudinary',
+        error: uploadError,
       });
     }
 
@@ -77,7 +113,23 @@ exports.createBlogController = async (req, res) => {
 exports.updateBLogController = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, image, category } = req.body;
+    const { title, description, image: bodyImage, category } = req.body;
+
+    let image = bodyImage;
+
+    if (req.file) {
+      try {
+        const uploadResult = await uploadToCloudinary(req.file.buffer);
+        image = uploadResult.secure_url;
+      } catch (uploadError) {
+        console.error("Cloudinary Blog Update Error:", uploadError);
+        return res.status(500).send({
+          success: false,
+          message: 'Failed to upload new blog cover to Cloudinary',
+          error: uploadError,
+        });
+      }
+    }
 
     const blog = await blogModel.findByIdAndUpdate(
       id,

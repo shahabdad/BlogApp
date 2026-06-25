@@ -199,7 +199,7 @@ const Blogcard = ({
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Box display="flex" alignItems="center" gap={1.5}>
             <Avatar
-              src={profilePic ? `http://localhost:9001/uploads/${profilePic}` : null}
+              src={profilePic ? (profilePic.startsWith('http') ? profilePic : `http://localhost:9001/uploads/${profilePic}`) : null}
               sx={{ bgcolor: '#4f46e5', width: 36, height: 36 }}
             >
               {username ? username[0].toUpperCase() : 'U'}

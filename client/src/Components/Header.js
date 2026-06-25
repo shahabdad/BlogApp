@@ -153,7 +153,7 @@ const Header = () => {
               )}
               <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
                 <Avatar
-                  src={profilePic ? `http://localhost:9001/uploads/${profilePic}` : null}
+                  src={profilePic ? (profilePic.startsWith('http') ? profilePic : `http://localhost:9001/uploads/${profilePic}`) : null}
                   sx={{ 
                     bgcolor: isDarkMode ? '#6366f1' : '#4f46e5', 
                     width: 38, 
@@ -181,6 +181,7 @@ const Header = () => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
+                <MenuItem component={Link} to="/profile">My Profile</MenuItem>
                 <MenuItem component={Link} to="/my-blogs">My Blogs</MenuItem>
                 <MenuItem component={Link} to="/create-blog">Create Blog</MenuItem>
                 <MenuItem onClick={handleLogout} sx={{ color: 'error.main', fontWeight: 600 }}>Logout</MenuItem>
@@ -231,9 +232,14 @@ const Header = () => {
                   );
                 })}
                 {isLogin && (
-                  <MenuItem onClick={handleLogout} sx={{ color: 'error.main', fontWeight: 600 }}>
-                    Logout
-                  </MenuItem>
+                  <>
+                    <MenuItem component={Link} to="/profile">
+                      My Profile
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout} sx={{ color: 'error.main', fontWeight: 600 }}>
+                      Logout
+                    </MenuItem>
+                  </>
                 )}
               </Menu>
             </>

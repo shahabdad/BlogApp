@@ -7,6 +7,7 @@ import Register from './Pages/Register';
 import UserBlogs from './Pages/UserBlogs';
 import CreateBlogs from './Pages/CreateBlogs';
 import BlogDetails from './Pages/BlogDetails';
+import Profile from './Pages/Profile';
 import   { Toaster } from 'react-hot-toast';
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='/create-blog' element={<CreateBlogs />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </div>
   );
